@@ -68,4 +68,4 @@ A web-based application for analyzing medical images to extract and visualize ca
 
 ## Acknowledgements
 
-Computer Graphics Project - 5th Semester CS.
+- Computer Graphics Project - 5th Semester CS.
