@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Features Extraction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔬 Cancer Features Extraction System</h1>
+            <p>Upload a medical image to extract cancer-related features</p>
+        </header>
+
+        <main>
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-box" id="uploadBox">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <h3>Drag & Drop or Click to Upload</h3>
+                    <p>Supported formats: PNG, JPG, JPEG, BMP, GIF</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                </div>
+            </div>
+
+            <div class="loading-section" id="loadingSection" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing image and extracting features...</p>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Extraction Results</h2>
+                    <button class="btn-secondary" id="downloadBtn">Download CSV</button>
+                </div>
+
+                <div class="visualization">
+                    <h3>Image Analysis Visualization</h3>
+                    <img id="visualizationImg" src="" alt="Visualization">
+                </div>
+
+                <div class="features-container">
+                    <h3>Extracted Features</h3>
+                    <div class="features-grid" id="featuresGrid"></div>
+                </div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display: none;">
+                <div class="error-box">
+                    <h3>❌ Error</h3>
+                    <p id="errorMessage"></p>
+                    <button class="btn-primary" onclick="resetForm()">Try Again</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Cancer Features Extraction System - Computer Graphics Project</p>
+        </footer>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadBox = document.getElementById('uploadBox');
+        const uploadSection = document.getElementById('uploadSection');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const errorSection = document.getElementById('errorSection');
+        const featuresGrid = document.getElementById('featuresGrid');
+        const visualizationImg = document.getElementById('visualizationImg');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let currentFeatures = {};
+
+        // Drag and drop handlers
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('drag-over');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('drag-over');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Please select a valid image file');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Show loading
+            uploadSection.style.display = 'none';
+            loadingSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+            errorSection.style.display = 'none';
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentFeatures = data.features;
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'An error occurred');
+                }
+            })
+            .catch(error => {
+                showError('Network error: ' + error.message);
+            });
+        }
+
+        function displayResults(data) {
+            loadingSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+
+            // Display visualization
+            visualizationImg.src = 'data:image/png;base64,' + data.visualization;
+
+            // Display features
+            featuresGrid.innerHTML = '';
+            const featureGroups = {
+                'Shape Features': ['area', 'perimeter', 'circularity', 'bbox_height', 'bbox_width', 'extent', 'solidity', 'eccentricity', 'orientation'],
+                'Color Features': ['mean_R', 'mean_G', 'mean_B', 'std_R', 'std_G', 'std_B', 'mean_brightness', 'std_brightness'],
+                'GLCM Features': Object.keys(data.features).filter(k => k.startsWith('glcm_')),
+                'LBP Features': Object.keys(data.features).filter(k => k.startsWith('lbp_')),
+                'HOG Features': Object.keys(data.features).filter(k => k.startsWith('hog_'))
+            };
+
+            Object.keys(featureGroups).forEach(groupName => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'feature-group';
+                groupDiv.innerHTML = `<h4>${groupName}</h4>`;
+                
+                const featuresList = document.createElement('div');
+                featuresList.className = 'features-list';
+                
+                featureGroups[groupName].forEach(key => {
+                    if (data.features[key] !== undefined) {
+                        const featureItem = document.createElement('div');
+                        featureItem.className = 'feature-item';
+                        const value = typeof data.features[key] === 'number' 
+                            ? data.features[key].toFixed(6) 
+                            : data.features[key];
+                        featureItem.innerHTML = `
+                            <span class="feature-name">${key.replace(/_/g, ' ')}</span>
+                            <span class="feature-value">${value}</span>
+                        `;
+                        featuresList.appendChild(featureItem);
+                    }
+                });
+                
+                groupDiv.appendChild(featuresList);
+                featuresGrid.appendChild(groupDiv);
+            });
+        }
+
+        function showError(message) {
+            loadingSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            errorSection.style.display = 'block';
+            errorMessage.textContent = message;
+        }
+
+        function resetForm() {
+            uploadSection.style.display = 'block';
+            loadingSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            errorSection.style.display = 'none';
+            fileInput.value = '';
+            currentFeatures = {};
+        }
+
+        downloadBtn.addEventListener('click', () => {
+            fetch('/download_csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ features: currentFeatures })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'extracted_features.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                alert('Error downloading CSV: ' + error.message);
+            });
+        });
+    </script>
+</body>
+</html>
+
