@@ -1,71 +1,103 @@
 # Cancer Features Extraction System
 
-A web-based application for analyzing medical images to extract and visualize cancer-related features. This tool processes images to identify tumor regions and computes various quantitative metrics including shape, color, and texture features.
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![Framework](https://img.shields.io/badge/Flask-Web%20App-green.svg)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Features
+> **Computational Feature Extraction for Tumor Image Analysis using Handcrafted Methods**
 
-- **Image Preprocessing**: Convert to grayscale, Gaussian blurring, and intensity rescaling.
-- **Tumor Segmentation**: Otsu's thresholding, morphological operations (remove small objects/holes), and overlay visualization.
-- **Feature Extraction**:
-  - **Shape Features**: Area, perimeter, circularity, solidity, eccentricity, etc.
-  - **Color Features**: Mean and standard deviation of RGB channels and brightness.
-  - **GLCM Features**: Texture analysis using Gray-Level Co-occurrence Matrix (Contrast, Energy, Homogeneity, etc.).
-  - **LBP Features**: Local Binary Patterns for texture classification.
-  - **HOG Features**: Histogram of Oriented Gradients.
-- **Interactive UI**: Drag-and-drop upload, instant visualization, and CSV export.
+A powerful web-based application designed to analyze medical images, specifically for tumor detection and feature extraction. This tool leverages advanced image processing techniques to identify tumor regions and compute quantitative metrics essential for medical analysis.
 
-## Technologies Used
+---
 
-- **Backend**: Python, Flask
-- **Image Processing**: OpenCV, scikit-image, NumPy, SciPy
-- **Data Handling**: Pandas
-- **Visualization**: Matplotlib
-- **Frontend**: HTML5, CSS3, JavaScript
+## 📸 Screenshots
 
-## Installation
+| Upload Interface | Analysis Result |
+|:---:|:---:|
+| ![Upload](https://via.placeholder.com/400x200?text=Upload+Interface+Placeholder) | ![Analysis](https://via.placeholder.com/400x200?text=Analysis+Result+Placeholder) |
+> *Please update these placeholders with actual screenshots of your application.*
 
-1.  **Clone the repository** (if applicable) or navigate to the project directory.
+---
 
-2.  **Create a virtual environment (optional but recommended):**
-    ```bash
-    python -m venv .venv
-    # Windows
-    .venv\Scripts\activate
-    # macOS/Linux
-    source .venv/bin/activate
-    ```
+## ✨ Key Features
 
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+- **🖼️ Advanced Image Preprocessing**
+  - Grayscale conversion, Gaussian blurring, and intensity rescaling for optimal analysis.
 
-## Usage
+- **🎯 Precise Tumor Segmentation**
+  - Utilizes Otsu's thresholding and morphological operations to accurately isolate tumor regions.
 
-1.  **Start the application:**
-    ```bash
-    python app.py
-    ```
+- **📊 Comprehensive Feature Extraction**
+  - **Shape**: Area, Perimeter, Circularity, Solidity, Eccentricity.
+  - **Color**: Mean & Std Dev of RGB channels, Brightness analysis.
+  - **Texture (GLCM)**: Contrast, Energy, Homogeneity, Correlation.
+  - **Texture (LBP & HOG)**: Local Binary Patterns and Histogram of Oriented Gradients.
 
-2.  **Open your browser:**
-    Go to `http://localhost:5000`
+- **💾 Interactive & Exportable**
+  - Drag-and-drop support, real-time visualization, and CSV export for extraction data.
 
-3.  **Analyze an image:**
-    - Click "Choose File" or drag and drop an image (supported: PNG, JPG, JPEG, BMP, GIF).
-    - Wait for the processing to complete.
-    - View the original image, segmentation mask, and detected region overlay.
-    - Review the extracted features table.
-    - Click "Download CSV" to save the feature data.
+---
 
-## Project Structure
+## 🛠️ Technology Stack
 
-- `app.py`: Main Flask application handling routes and API endpoints.
-- `cancer_features.py`: Core logic for image processing and feature extraction.
-- `requirements.txt`: List of Python dependencies.
-- `templates/index.html`: Main user interface file.
-- `static/`: Contains static assets like CSS.
-- `uploads/`: Temporary directory for uploaded files.
+| Category | Technologies |
+|----------|--------------|
+| **Backend** | Python, Flask |
+| **Processing** | OpenCV, scikit-image, NumPy, SciPy |
+| **Data** | Pandas |
+| **Frontend** | HTML5, CSS3, JavaScript |
+
+---
+
+## 🚀 Installation & Setup
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/MahmoudAlkhwalda/Computational-Feature-Extraction-for-Tumor-Image-Analysis-using-Handcrafted-Methods.git
+   cd Computational-Feature-Extraction-for-Tumor-Image-Analysis-using-Handcrafted-Methods
+   ```
+
+2. **Set Up Virtual Environment** (Recommended)
+   ```bash
+   python -m venv .venv
+   # Windows
+   .venv\Scripts\activate
+   # macOS/Linux
+   source .venv/bin/activate
+   ```
+
+3. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Application**
+   ```bash
+   python app.py
+   ```
+   Open your browser and visit: `http://localhost:5000`
+
+---
+
+## 📂 Project Structure
+
+```text
+├── app.py                # Main Flask application
+├── cancer_features.py    # Core image processing logic
+├── requirements.txt      # Project dependencies
+├── static/               # CSS, JS, and images
+├── templates/            # HTML templates
+└── uploads/              # Temporary storage for uploads
+```
+
+---
+
+## 👤 Author
+
+**Mahmoud Alkhwalda**
+
+---
 
 ## Acknowledgements
 
-- Computer Graphics Project - 5th Semester CS.
+Computer Graphics Project - 5th Semester CS.
