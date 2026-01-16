@@ -10,15 +10,6 @@ A powerful web-based application designed to analyze medical images, specificall
 
 ---
 
-## 📸 Screenshots
-
-| Upload Interface | Analysis Result |
-|:---:|:---:|
-| ![Upload](https://via.placeholder.com/400x200?text=Upload+Interface+Placeholder) | ![Analysis](https://via.placeholder.com/400x200?text=Analysis+Result+Placeholder) |
-> *Please update these placeholders with actual screenshots of your application.*
-
----
-
 ## ✨ Key Features
 
 - **🖼️ Advanced Image Preprocessing**
